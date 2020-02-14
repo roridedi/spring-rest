@@ -17,6 +17,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import static springfox.documentation.builders.PathSelectors.*;
 import static com.google.common.base.Predicates.*;
@@ -64,7 +67,28 @@ public class Application {
                 regex("/v1/*")
         );
     }    
+    @EnableWebSecurity
+    public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    	
+    	   @Override
+    	    protected void configure(HttpSecurity http) throws Exception {
+    	        http
+    	          .authorizeRequests()
+    	          .anyRequest()
+    	          .authenticated()
+    	          .and()
+    	          .httpBasic();
+    	    }
 
+//        @Override
+//        protected void configure(HttpSecurity http) throws Exception {
+//            http
+//                .requiresChannel()
+//                .anyRequest()
+//                .requiresSecure();
+//        }
+    }
+    
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
             .title("Openshift uncontained.io Sample REST API")
